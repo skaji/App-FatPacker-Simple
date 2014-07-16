@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use utf8;
+use App::FatPacker::Simple;
+
+App::FatPacker::Simple->new->parse_options(@ARGV)->run;
+
+__END__
+
+=head1 NAME
+
+fatpack-simple - only fatpack a script
+
+
+=head1 SYNOPSIS
+
+    > fatpack-simple [OPTIONS] SCRIPT
+
+    Options:
+    -d, --dir    DIRECTORIES  where depending pm files are.
+                              default: lib,ext,extlib,local,fatlib
+    -o, --output OUTPUT       output filename
+    -q, --quiet               be quiet
+    -h, --help                show this help
+
+    Examples:
+    > fatpack-simple my-script.pl
+    > fatpack-simple --dir deps,my-ext --out hoge.fatpacked.pl hoge.pl
+
+=head1 DESCRIPTION
+
+C<fatpack-simple> helps you fatpack your script
+when you understand the whole dependencies of your scirpt.
+
+=head2 HOW TO FATPACK my-script.pl
+
+C<my-script.pl> may use your perl module in C<lib> directory.
+
+Firt install external dependencies of C<my-script.pl> to C<local> dir:
+
+    # if extenal dependencies declared in cpanfile
+    > carton install
+    # or manually
+    > cpanm -Llocal Foo Hoge
+    # or may requires --reintall option
+    > cpanm -llocal --reinstall HTTP::Tiny
+
+Now the whole dependencies are in C<lib> and C<local> directories.
+Execute C<fatpack-simple>, and you get C<my-script.fatpack.pl>:
+
+    > fatpack-simple my-script.pl
+    # get my-script.fatpack.pl
+
+=head1 LICENSE
+
+Copyright (C) Shoichi Kaji.
+
+This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 AUTHOR
+
+Shoichi Kaji E<lt>skaji@cpan.orgE<gt>
+
+=cut
+

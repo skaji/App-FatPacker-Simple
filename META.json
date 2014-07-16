@@ -1,0 +1,42 @@
+{
+   "abstract" : "fatpack a script",
+   "author" : [
+      "Shoichi Kaji <skaji@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Template/0.01",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "App-FatPacker-Simple",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "eg",
+         "example",
+         "author"
+      ]
+   },
+   "prereqs" : {
+      "runtime" : {
+         "requires" : {
+            "App::FatPacker" : "0",
+            "Perl::Strip" : "0",
+            "perl" : "5.008005"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.98"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "version" : "0.01"
+}
