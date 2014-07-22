@@ -18,15 +18,18 @@ fatpack-simple - only fatpack a script
     > fatpack-simple [OPTIONS] SCRIPT
 
     Options:
-    -d, --dir    DIRECTORIES  where depending pm files are.
-                              default: lib,ext,extlib,local,fatlib
-    -o, --output OUTPUT       output filename
-    -q, --quiet               be quiet
-    -h, --help                show this help
+    -d, --dir DIRECTORIES   where pm files to be fatpacked are.
+                            default: lib,ext,extlib,local,fatlib
+    -o, --output OUTPUT     output filename
+    -e, --exclude MODULES   modules not to be fatpacked
+    -s, --strict            turn on strict mode
+    -q, --quiet             be quiet
+    -h, --help              show this help
 
     Examples:
     > fatpack-simple my-script.pl
     > fatpack-simple --dir deps,my-ext --out hoge.fatpacked.pl hoge.pl
+    > fatpack-simple --exclude Module::Build,List::MoreUtils --strict script.pl
 
 =head1 DESCRIPTION
 

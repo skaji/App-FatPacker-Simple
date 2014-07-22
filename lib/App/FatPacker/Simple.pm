@@ -2,13 +2,16 @@ package App::FatPacker::Simple;
 use strict;
 use warnings;
 use utf8;
+use App::cpanminus::fatscript;
+use Config;
 use Cwd 'cwd';
 use File::Basename 'basename';
+use File::Find 'find';
 use File::Spec::Functions 'catdir';
+use File::Spec::Unix;
 use Getopt::Long qw(:config no_auto_abbrev no_ignore_case);
 use Perl::Strip;
 use Pod::Usage 'pod2usage';
-use File::Find 'find';
 
 our $VERSION = '0.01';
 
@@ -32,17 +35,64 @@ sub parse_options {
     my $self = shift;
     local @ARGV = @_;
     GetOptions
-        "output|o=s" => \(my $output),
-        "quiet|q"    => \(my $quiet),
-        "dir|d=s"    => \(my $dir = 'ext,extlib,lib,fatpack,local'),
-        "help|h"     => sub { pod2usage(0) },
+        "output|o=s"  => \(my $output),
+        "quiet|q"     => \(my $quiet),
+        "dir|d=s"     => \(my $dir = 'ext,extlib,lib,fatpack,local'),
+        "help|h"      => sub { pod2usage(0) },
+        "exclude|e=s" => \(my $exclude),
+        "strict|s"    => \(my $strict),
     or pod2usage(1);
     $self->{script} = shift @ARGV
         or do { warn "Missing scirpt.\n"; pod2usage(1) };
-    $self->{dir}    = [split /,/, $dir];
+    $self->{dir}    = $self->build_dir($dir);
     $self->{output} = $output;
     $self->{quiet}  = $quiet;
+    $self->{strict} = $strict;
+    if ($exclude) {
+        my $cpanm = App::cpanminus::script->new;
+        my $inc = [map {("$_/$Config{archname}", $_)} @{$self->{dir}}];
+        for my $e (split /,/, $exclude) {
+            my ($metadata, $packlist) = $cpanm->packlists_containing($e, $inc);
+            if ($packlist) {
+                push @{$self->{exclude}}, $cpanm->unpack_packlist($packlist);
+            } else {
+                $self->warning("Missing $e in $dir");
+            }
+        }
+    } else {
+        $self->{exclude} = [];
+    }
     $self;
+}
+
+sub warning {
+    my ($self, $msg) = @_;
+    chomp $msg;
+    if ($self->{strict}) {
+        die "=> ERROR $msg\n";
+    } elsif (!$self->{quiet}) {
+        warn "=> WARN $msg\n";
+    }
+}
+
+sub debug {
+    my ($self, $msg) = @_;
+    chomp $msg;
+    if (!$self->{quiet}) {
+        warn "-> $msg\n";
+    }
+}
+
+{
+    # for relocatable perl patch
+    package
+        App::cpanminus::script;
+    no warnings 'redefine';
+    sub unpack_packlist {
+        my ($self, $packlist) = @_;
+        open my $fh, '<', $packlist or die "$packlist: $!";
+        map { chomp; s/\s+relocate_as=.*//; $_ } <$fh>;
+    }
 }
 
 sub output_filename {
@@ -77,33 +127,41 @@ sub load_file {
         open my $fh, "<", $file or die "Cannot open '$file': $!\n";
         local $/; <$fh>;
     };
-    unless ($self->{quiet}) {
-        my $pm_name = $file;
-        $pm_name =~ s{.*?lib/(perl5/)?}{};
-        warn "-> Perl::Strip $pm_name ...\n";
-    }
-    $self->{perl_strip}->strip($content);
+    my $pm_name = $file;
+    $pm_name =~ s{.*?lib/(perl5/)?}{};
+    $self->debug("perl-strip $pm_name");
+    return $self->{perl_strip}->strip($content);
 }
 
 sub collect_files {
-  my ($self, $dir, $files) = @_;
-  find(sub {
-    return unless -f $_;
-    for my $ignore (@$IGNORE_FILE) {
-        $_ =~ $ignore and return;
-    }
-    !/\.pm$/ and warn "File ${File::Find::name} isn't a .pm file - can't pack this -- if you hoped we were going to, things may not be what you expected later\n" and return;
-    $files->{File::Spec::Unix->abs2rel($File::Find::name,$dir)} =
-      $self->load_file($File::Find::name);
-  }, $dir);
+    my ($self, $dir, $files) = @_;
+    find(sub {
+        return unless -f $_;
+        my $pm_name = $File::Find::name;
+        $pm_name =~ s{.*?lib/(perl5/)?}{};
+        for my $ignore (@$IGNORE_FILE) {
+            $_ =~ $ignore and return;
+        }
+        for my $exclude (@{$self->{exclude}}) {
+            if ($File::Find::name eq $exclude) {
+                $self->debug("exclude $pm_name");
+                return;
+            }
+        }
+        if (!/\.pm$/) {
+            $self->warning("find non pm file $pm_name");
+            return;
+        }
+        $files->{File::Spec::Unix->abs2rel($File::Find::name,$dir)} =
+            $self->load_file($File::Find::name);
+    }, $dir);
 }
 
-
-sub collect_dirs {
-    my $self = shift;
+sub build_dir {
+    my ($self, $dir_string) = @_;
     my $cwd = cwd;
     my @dir;
-    for my $d (grep -d, map { catdir($cwd, $_) } @{ $self->{dir} || [] }) {
+    for my $d (grep -d, map { catdir($cwd, $_) } split /,/, $dir_string) {
         my $try = catdir($d, "lib/perl5");
         if (-d $try) {
             push @dir, $try;
@@ -111,7 +169,11 @@ sub collect_dirs {
             push @dir, $d;
         }
     }
-    return @dir;
+    return \@dir;
+}
+
+sub collect_dirs {
+    @{ shift->{dir} };
 }
 
 1;
