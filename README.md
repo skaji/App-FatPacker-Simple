@@ -13,6 +13,7 @@ fatpack-simple - only fatpack a script
     -e, --exclude MODULES   modules not to be fatpacked
     -s, --strict            turn on strict mode
     -q, --quiet             be quiet
+        --color             color output, default: on
     -h, --help              show this help
 
     Examples:
@@ -29,7 +30,7 @@ when you understand the whole dependencies of your scirpt.
 
 `my-script.pl` may use your perl module in `lib` directory.
 
-Firt install external dependencies of `my-script.pl` to `local` dir:
+First install external dependencies of `my-script.pl` to `local` dir:
 
     # if extenal dependencies declared in cpanfile
     > carton install

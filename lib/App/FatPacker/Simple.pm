@@ -41,6 +41,7 @@ sub parse_options {
         "help|h"      => sub { pod2usage(0) },
         "exclude|e=s" => \(my $exclude),
         "strict|s"    => \(my $strict),
+        "color!"      => \(my $color = 1),
     or pod2usage(1);
     $self->{script} = shift @ARGV
         or do { warn "Missing scirpt.\n"; pod2usage(1) };
@@ -48,6 +49,8 @@ sub parse_options {
     $self->{output} = $output;
     $self->{quiet}  = $quiet;
     $self->{strict} = $strict;
+    $self->{color}  = $color;
+    $self->{exclude} = [];
     if ($exclude) {
         my $cpanm = App::cpanminus::script->new;
         my $inc = [map {("$_/$Config{archname}", $_)} @{$self->{dir}}];
@@ -59,8 +62,6 @@ sub parse_options {
                 $self->warning("Missing $e in $dir");
             }
         }
-    } else {
-        $self->{exclude} = [];
     }
     $self;
 }
@@ -68,10 +69,13 @@ sub parse_options {
 sub warning {
     my ($self, $msg) = @_;
     chomp $msg;
+    my $color = $self->{color}
+              ? sub { "\e[31m$_[0]\e[m", "\n" }
+              : sub { "$_[0]\n" };
     if ($self->{strict}) {
-        die "=> ERROR $msg\n";
+        die $color->("=> ERROR $msg");
     } elsif (!$self->{quiet}) {
-        warn "=> WARN $msg\n";
+        warn $color->("=> WARN $msg");
     }
 }
 
@@ -128,7 +132,9 @@ sub load_file {
         local $/; <$fh>;
     };
     my $pm_name = $file;
-    $pm_name =~ s{.*?lib/(perl5/)?}{};
+    my $dir_regexp = join "|", map "$_/", @{$self->{dir}};
+    $dir_regexp = qr{^(?:$dir_regexp)}o;
+    $pm_name =~ s{$dir_regexp}{};
     $self->debug("perl-strip $pm_name");
     return $self->{perl_strip}->strip($content);
 }
@@ -138,7 +144,9 @@ sub collect_files {
     find(sub {
         return unless -f $_;
         my $pm_name = $File::Find::name;
-        $pm_name =~ s{.*?lib/(perl5/)?}{};
+        my $dir_regexp = join "|", map "$_/", @{$self->{dir}};
+        $dir_regexp = qr{^(?:$dir_regexp)}o;
+        $pm_name =~ s{$dir_regexp}{};
         for my $ignore (@$IGNORE_FILE) {
             $_ =~ $ignore and return;
         }
@@ -175,6 +183,7 @@ sub build_dir {
 sub collect_dirs {
     @{ shift->{dir} };
 }
+
 
 1;
 __END__
