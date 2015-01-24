@@ -52,7 +52,7 @@ sub parse_options {
     $self->{color}  = $color;
     $self->{exclude} = [];
     if ($exclude) {
-        my $cpanm = App::cpanminus::script->new;
+        my $cpanm = App::FatPacker::Simple::cpanm->new;
         my $inc = [map {("$_/$Config{archname}", $_)} @{$self->{dir}}];
         for my $e (split /,/, $exclude) {
             my ($metadata, $packlist) = $cpanm->packlists_containing($e, $inc);
@@ -88,10 +88,9 @@ sub debug {
 }
 
 {
+    package App::FatPacker::Simple::cpanm;
+    use parent 'App::cpanminus::script';
     # for relocatable perl patch
-    package
-        App::cpanminus::script;
-    no warnings 'redefine';
     sub unpack_packlist {
         my ($self, $packlist) = @_;
         open my $fh, '<', $packlist or die "$packlist: $!";
