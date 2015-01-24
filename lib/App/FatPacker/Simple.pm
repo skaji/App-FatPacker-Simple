@@ -125,44 +125,37 @@ sub run {
 }
 
 sub load_file {
-    my ($self, $file) = @_;
+    my ($self, $file, $dir) = @_;
 
     my $content = do {
         open my $fh, "<", $file or die "Cannot open '$file': $!\n";
         local $/; <$fh>;
     };
-    my $pm_name = $file;
-    my $dir_regexp = join "|", map "$_/", @{$self->{dir}};
-    $dir_regexp = qr{^(?:$dir_regexp)}o;
-    $pm_name =~ s{$dir_regexp}{};
-    $self->debug("perl-strip $pm_name");
+    my $relative = File::Spec::Unix->abs2rel($file, $dir);
+    $self->debug("perl-strip $relative");
     return $self->{perl_strip}->strip($content);
 }
 
 sub collect_files {
     my ($self, $dir, $files) = @_;
-    find(sub {
+    find sub {
         return unless -f $_;
-        my $pm_name = $File::Find::name;
-        my $dir_regexp = join "|", map "$_/", @{$self->{dir}};
-        $dir_regexp = qr{^(?:$dir_regexp)}o;
-        $pm_name =~ s{$dir_regexp}{};
         for my $ignore (@$IGNORE_FILE) {
             $_ =~ $ignore and return;
         }
+        my $relative = File::Spec::Unix->abs2rel($File::Find::name, $dir);
         for my $exclude (@{$self->{exclude}}) {
             if ($File::Find::name eq $exclude) {
-                $self->debug("exclude $pm_name");
+                $self->debug("exclude $relative");
                 return;
             }
         }
         if (!/\.pm$/) {
-            $self->warning("find non pm file $pm_name");
+            $self->warning("skip non pm file $relative");
             return;
         }
-        $files->{File::Spec::Unix->abs2rel($File::Find::name,$dir)} =
-            $self->load_file($File::Find::name);
-    }, $dir);
+        $files->{$relative} = $self->load_file($File::Find::name, $dir);
+    }, $dir;
 }
 
 sub build_dir {
