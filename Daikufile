@@ -1,5 +1,0 @@
-use Dist::Template::Tasks
-    module => 'App::FatPacker::Simple',
-    readme => 'bin/fatpack-simple',
-;
-
