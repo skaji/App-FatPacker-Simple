@@ -143,6 +143,9 @@ sub collect_files {
         for my $ignore (@$IGNORE_FILE) {
             $_ =~ $ignore and return;
         }
+        if ($File::Find::name =~ m!$dir/$Config{archname}!) {
+            return;
+        }
         my $relative = File::Spec::Unix->abs2rel($File::Find::name, $dir);
         for my $exclude (@{$self->{exclude}}) {
             if ($File::Find::name eq $exclude) {
@@ -165,13 +168,14 @@ sub build_dir {
     for my $d (grep -d, map { catdir($cwd, $_) } split /,/, $dir_string) {
         my $try = catdir($d, "lib/perl5");
         if (-d $try) {
-            push @dir, $try;
+            push @dir, $try, catdir($try, $Config{archname});
         } else {
-            push @dir, $d;
+            push @dir, $d, catdir($d, $Config{archname});
         }
     }
-    return \@dir;
+    return [ grep -d, @dir ];
 }
+
 
 sub collect_dirs {
     @{ shift->{dir} };
