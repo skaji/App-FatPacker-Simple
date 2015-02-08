@@ -1,10 +1,10 @@
 {
-   "abstract" : "fatpack a script",
+   "abstract" : "only fatpack a script",
    "author" : [
       "Shoichi Kaji <skaji@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.142690",
+   "generated_by" : "Minilla/v2.3.0, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -51,6 +51,8 @@
       },
       "test" : {
          "requires" : {
+            "Capture::Tiny" : "0",
+            "File::pushd" : "0",
             "Test::More" : "0.98"
          }
       }
@@ -67,5 +69,6 @@
          "web" : "https://github.com/shoichikaji/App-FatPacker-Simple"
       }
    },
-   "version" : "0.01"
+   "version" : "0.01",
+   "x_authority" : "cpan:SKAJI"
 }

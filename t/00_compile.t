@@ -13,7 +13,7 @@ find sub {
 }, "lib";
 
 use_ok $_ for @module;
-ok system($^X, "-wc", $_) == 0 for glob "bin/* script/*";
+ok system($^X, "-c", $_) == 0 for glob "bin/* script/*";
 
 done_testing;
 

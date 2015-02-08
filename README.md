@@ -1,49 +1,56 @@
 # NAME
 
-fatpack-simple - only fatpack a script
+App::FatPacker::Simple - only fatpack a script
 
 # SYNOPSIS
 
-    > fatpack-simple [OPTIONS] SCRIPT
-
-    Options:
-    -d, --dir DIRECTORIES   where pm files to be fatpacked are.
-                            default: lib,ext,extlib,local,fatlib
-    -o, --output OUTPUT     output filename
-    -e, --exclude MODULES   modules not to be fatpacked
-    -s, --strict            turn on strict mode
-    -q, --quiet             be quiet
-        --color             color output, default: on
-    -h, --help              show this help
-
-    Examples:
-    > fatpack-simple my-script.pl
-    > fatpack-simple --dir deps,my-ext --out hoge.fatpacked.pl hoge.pl
-    > fatpack-simple --exclude Module::Build,List::MoreUtils --strict script.pl
+    > fatpack-simple script.pl
 
 # DESCRIPTION
 
-`fatpack-simple` helps you fatpack your script
-when you understand the whole dependencies of your scirpt.
+App::FatPacker::Simple or its frontend `fatpack-simple` helps you
+fatpack a script when **you** understand the whole dependencies of it.
 
-## HOW TO FATPACK my-script.pl
+For tutorial, please look at [App::FatPacker::Simple::Tutorial](https://metacpan.org/pod/App::FatPacker::Simple::Tutorial).
 
-`my-script.pl` may use your perl module in `lib` directory.
+# MOTIVATION
 
-First install external dependencies of `my-script.pl` to `local` dir:
+App::FatPacker::Simple is a subclass of [App::FatPacker](https://metacpan.org/pod/App::FatPacker).
+Let me explain why I wrote this module.
 
-    # if extenal dependencies declared in cpanfile
-    > carton install
-    # or manually
-    > cpanm -Llocal Foo Hoge
-    # or may requires --reintall option
-    > cpanm -llocal --reinstall HTTP::Tiny
+[App::FatPacker](https://metacpan.org/pod/App::FatPacker) brings more portability to Perl, that is totally awesome.
 
-Now the whole dependencies are in `lib` and `local` directories.
-Execute `fatpack-simple`, and you get `my-script.fatpack.pl`:
+As far as I understand, App::FatPacker does 3 things:
+(a) trace dependencies for a script,
+(b) collects dependencies to `fatlib` directory
+and (c) fatpack the script with modules in `fatlib`.
 
-    > fatpack-simple my-script.pl
-    # get my-script.fatpack.pl
+As for (a), I often encountered problems. For example,
+modules that I don't want to trace trace,
+conversely, modules that I DO want to trace do not trace.
+Moreover a module changes interfaces recently,
+so we have to fatpack that module with new version, etc.
+So I think if you author intend to fatpack a script,
+**YOU** need to understand the whole dependencies of it.
+
+As for (b), to locate modules in a directory, why don't you use
+`carton` or `cpanm`?
+
+So the rest is (c) to fatpack a script with modules in directories,
+on which App::FatPacker::Simple concentrates.
+
+That is, App::FatPacker::Simple only fatpacks a script with features:
+
+- automatically perl-strip modules
+- has option to exclude some modules
+
+# SEE ALSO
+
+[App::FatPacker](https://metacpan.org/pod/App::FatPacker)
+
+[App::fatten](https://metacpan.org/pod/App::fatten)
+
+[Perl::Strip](https://metacpan.org/pod/Perl::Strip)
 
 # LICENSE
 
