@@ -1,3 +1,5 @@
+=for stopwords fatpack fatpacks fatpacked deps
+
 =head1 NAME
 
 App::FatPacker::Simple::Tutorial - tutorial!
@@ -17,9 +19,13 @@ Moreover,
 
 =over 4
 
-=item C<hello.pl> uses your modules in C<lib> directory, C<lib/Hello.pm>, C<lib/Hello/CLI.pm>.
+=item *
 
-=item external cpan module dependencies are declared in C<cpanfile>.
+C<hello.pl> uses your modules in C<lib> directory: C<lib/Hello.pm>, C<lib/Hello/CLI.pm>
+
+=item *
+
+external cpan module dependencies are declared in C<cpanfile>
 
 =back
 
@@ -58,7 +64,7 @@ then cpanm installed configure deps Module::Build, CPAN::Meta, right?
 They are not necessary for runtime, so execute C<fatpack-simple> with
 C<--exclude> option:
 
-    > fatpack-simple --exclude Module::Build,CPAN::Meta hello.pl
+    $ fatpack-simple --exclude Module::Build,CPAN::Meta hello.pl
     -> perl strip Hello.pm
     -> perl strip Hello/CLI.pm
     -> perl strip parent.pm

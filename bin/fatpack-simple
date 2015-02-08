@@ -8,10 +8,11 @@ App::FatPacker::Simple->new->parse_options(@ARGV)->run;
 
 __END__
 
+=for stopwords fatpack fatpacks fatpacked deps
+
 =head1 NAME
 
 fatpack-simple - only fatpack a script
-
 
 =head1 SYNOPSIS
 
@@ -19,42 +20,33 @@ fatpack-simple - only fatpack a script
 
     Options:
     -d, --dir DIRECTORIES   where pm files to be fatpacked are.
-                            default: lib,ext,extlib,local,fatlib
+                            default: lib,fatlib,local,extlib
     -o, --output OUTPUT     output filename
     -e, --exclude MODULES   modules not to be fatpacked
     -s, --strict            turn on strict mode
     -q, --quiet             be quiet
         --color             color output, default: on
+        --no-perl-strip     do not perform perl-strip
     -h, --help              show this help
+    -v, --version           show version
 
     Examples:
-    > fatpack-simple my-script.pl
-    > fatpack-simple --dir deps,my-ext --out hoge.fatpacked.pl hoge.pl
+    > fatpack-simple script.pl
+    > fatpack-simple --dir deps,my-ext --output artifact.pl script.pl
     > fatpack-simple --exclude Module::Build,List::MoreUtils --strict script.pl
 
 =head1 DESCRIPTION
 
-C<fatpack-simple> helps you fatpack your script
-when you understand the whole dependencies of your scirpt.
+C<fatpack-simple> helps you fatpack a script when B<you> understand the whole
+dependencies of it.
 
-=head2 HOW TO FATPACK my-script.pl
+If you execute C<fatpack-simple script.pl>,
+then you will get C<script.fatpack.pl>
+that is the fatpacked C<script.pl> with all modules in
+C<lib,fatlib,local,extlib> directories.
+Also note that the all modules are automatically perl-stripped.
 
-C<my-script.pl> may use your perl module in C<lib> directory.
-
-First install external dependencies of C<my-script.pl> to C<local> dir:
-
-    # if extenal dependencies declared in cpanfile
-    > carton install
-    # or manually
-    > cpanm -Llocal Foo Hoge
-    # or may requires --reintall option
-    > cpanm -llocal --reinstall HTTP::Tiny
-
-Now the whole dependencies are in C<lib> and C<local> directories.
-Execute C<fatpack-simple>, and you get C<my-script.fatpack.pl>:
-
-    > fatpack-simple my-script.pl
-    # get my-script.fatpack.pl
+For tutorial, please look at L<App::FatPacker::Simple::Tutorial>.
 
 =head1 LICENSE
 
