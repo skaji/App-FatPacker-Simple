@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/shoichikaji/App-FatPacker-Simple.svg?branch=master)](https://travis-ci.org/shoichikaji/App-FatPacker-Simple)
 # NAME
 
 App::FatPacker::Simple - only fatpack a script
