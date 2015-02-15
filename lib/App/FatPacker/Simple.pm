@@ -2,6 +2,7 @@ package App::FatPacker::Simple;
 use strict;
 use warnings;
 use utf8;
+use App::FatPacker;
 use App::cpanminus::fatscript;
 use Config;
 use Cwd 'cwd';
@@ -15,8 +16,6 @@ use Pod::Usage 'pod2usage';
 
 our $VERSION = '0.01';
 
-use parent 'App::FatPacker';
-
 our $IGNORE_FILE = [
     qr/\.pod$/,
     qr/^\.packlist$/,
@@ -26,7 +25,7 @@ our $IGNORE_FILE = [
 
 sub new {
     my $class = shift;
-    $class->SUPER::new(@_);
+    bless {@_}, $class;
 }
 
 sub parse_options {
@@ -126,6 +125,29 @@ sub run {
     $self->debug("Successfully created $output_filename");
 }
 
+# In order not to depend on App::FatPacker internals,
+# we use only App::FatPacker::fatpack_code method.
+sub fatpack_file {
+    my ($self, $file) = @_;
+    my ($shebang, $script) = $self->load_main_script($file);
+    my %files;
+    $self->collect_files($_, \%files) for @{ $self->{dir} };
+    my $fatpacker = App::FatPacker->new;
+    return join "\n", $shebang, $fatpacker->fatpack_code(\%files), $script;
+}
+
+# almost copy from App::FatPacker::load_main_script
+sub load_main_script {
+    my ($self, $file) = @_;
+    open my $fh, "<", $file or die "Cannot open '$file': $!\n";
+    my ($shebang, $script) = ( scalar(<$fh>), join "", <$fh> );
+    if (index($shebang, '#!') != 0) {
+        $shebang = "";
+        $script  = $shebang . $script;
+    }
+    ($shebang, $script);
+}
+
 sub load_file {
     my ($self, $file, $dir) = @_;
 
@@ -177,10 +199,6 @@ sub build_dir {
         }
     }
     return [ grep -d, @dir ];
-}
-
-sub collect_dirs {
-    @{ shift->{dir} };
 }
 
 1;
