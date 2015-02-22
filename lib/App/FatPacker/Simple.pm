@@ -3,9 +3,9 @@ use strict;
 use warnings;
 use utf8;
 use App::FatPacker;
-use App::cpanminus::fatscript;
 use Config;
 use Cwd 'cwd';
+use Distribution::Metadata;
 use File::Basename 'basename';
 use File::Find 'find';
 use File::Spec::Functions 'catdir';
@@ -51,12 +51,12 @@ sub parse_options {
     $self->{perl_strip} = $no_perl_strip ? undef : Perl::Strip->new;
     $self->{exclude}    = [];
     if ($exclude) {
-        my $cpanm = App::FatPacker::Simple::cpanm->new;
-        my $inc = [map {("$_/$Config{archname}", $_)} @{$self->{dir}}];
         for my $e (split /,/, $exclude) {
-            my ($metadata, $packlist) = $cpanm->packlists_containing($e, $inc);
-            if ($packlist) {
-                push @{$self->{exclude}}, $cpanm->unpack_packlist($packlist);
+            my $dist = Distribution::Metadata->new_from_module(
+                $e, inc => $self->{dir},
+            );
+            if (my $files = $dist->files) {
+                push @{$self->{exclude}}, @$files;
             } else {
                 $self->warning("Missing $e in $dir");
             }
@@ -83,18 +83,6 @@ sub debug {
     chomp $msg;
     if (!$self->{quiet}) {
         warn "-> $msg\n";
-    }
-}
-
-{
-    package
-        App::FatPacker::Simple::cpanm;
-    use parent 'App::cpanminus::script';
-    # for relocatable perl patch
-    sub unpack_packlist {
-        my ($self, $packlist) = @_;
-        open my $fh, '<', $packlist or die "$packlist: $!";
-        map { chomp; s/\s+relocate_as=.*//; $_ } <$fh>;
     }
 }
 
