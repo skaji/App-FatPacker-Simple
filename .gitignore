@@ -12,4 +12,5 @@
 /cpanfile.snapshot
 /Build
 /_build
+/.build
 

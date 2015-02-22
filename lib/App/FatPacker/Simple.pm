@@ -219,26 +219,33 @@ App::FatPacker::Simple - only fatpack a script
 =head1 DESCRIPTION
 
 App::FatPacker::Simple or its frontend C<fatpack-simple> helps you
-fatpack a script when B<you> understand the whole dependencies of it.
+fatpack a script when B<YOU> understand the whole dependencies of it.
 
 For tutorial, please look at L<App::FatPacker::Simple::Tutorial>.
 
 =head1 MOTIVATION
 
-App::FatPacker::Simple is a subclass of L<App::FatPacker>.
+App::FatPacker::Simple is an alternative frontend for L<App::FatPacker>.
 Let me explain why I wrote this module.
 
 L<App::FatPacker> brings more portability to Perl, that is totally awesome.
 
 As far as I understand, App::FatPacker does 3 things:
-(a) trace dependencies for a script,
-(b) collects dependencies to C<fatlib> directory
-and (c) fatpack the script with modules in C<fatlib>.
 
-As for (a), I often encountered problems. For example,
+=over 4
+
+=item (a) trace dependencies for a script
+
+=item (b) collects dependencies to C<fatlib> directory
+
+=item (c) fatpack the script with modules in C<fatlib>
+
+=back
+
+As for (a), I have often encountered problems. For example,
 modules that I don't want to trace trace,
 conversely, modules that I DO want to trace do not trace.
-Moreover a module changes interfaces recently,
+Moreover a core module has changed interfaces or has been bug-fixed recently,
 so we have to fatpack that module with new version, etc.
 So I think if you author intend to fatpack a script,
 B<YOU> need to understand the whole dependencies of it.
@@ -253,9 +260,9 @@ That is, App::FatPacker::Simple only fatpacks a script with features:
 
 =over 4
 
-=item automatically perl-strip modules
+=item * automatically perl-strip modules
 
-=item has option to exclude some modules
+=item * has option to exclude some modules
 
 =back
 
