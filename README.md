@@ -16,7 +16,8 @@ For tutorial, please look at [App::FatPacker::Simple::Tutorial](https://metacpan
 
 # MOTIVATION
 
-App::FatPacker::Simple is an alternative frontend for [App::FatPacker](https://metacpan.org/pod/App::FatPacker).
+App::FatPacker::Simple is an alternative for [App::FatPacker](https://metacpan.org/pod/App::FatPacker)'s
+`fatpack file` command.
 Let me explain why I wrote this module.
 
 [App::FatPacker](https://metacpan.org/pod/App::FatPacker) brings more portability to Perl, that is totally awesome.

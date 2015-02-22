@@ -213,7 +213,8 @@ For tutorial, please look at L<App::FatPacker::Simple::Tutorial>.
 
 =head1 MOTIVATION
 
-App::FatPacker::Simple is an alternative frontend for L<App::FatPacker>.
+App::FatPacker::Simple is an alternative for L<App::FatPacker>'s
+C<fatpack file> command.
 Let me explain why I wrote this module.
 
 L<App::FatPacker> brings more portability to Perl, that is totally awesome.
