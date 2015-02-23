@@ -36,8 +36,9 @@ my $base = abs_path( File::Spec->catdir( dirname(__FILE__), "..") );
 sub run {
     my @argv = @_;
     my ($out, $err, $exit) = capture {
-        local $ENV{PERL5LIB}; # XXX
-        local $ENV{PERL5OPT}; # XXX
+        # your responsibility :-)
+        # local $ENV{PERL5LIB};
+        # local $ENV{PERL5OPT};
         system $^X, "-I$base/lib", "$base/bin/fatpack-simple", @argv;
     };
     Result->new($out, $err, $exit);
