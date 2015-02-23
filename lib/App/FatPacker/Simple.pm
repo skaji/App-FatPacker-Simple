@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 use App::FatPacker;
 use Config;
-use Cwd 'cwd';
+use Cwd 'abs_path';
 use Distribution::Metadata;
 use File::Basename 'basename';
 use File::Find 'find';
@@ -151,14 +151,22 @@ sub load_file {
 
 sub collect_files {
     my ($self, $dir, $files) = @_;
+
+    # When $dir is not an archlib,
+    # and we are about to search $dir/archlib, skip it!
+    # because $dir/archlib itself will be searched another time.
+    my $skip_dir = catdir($dir, $Config{archname});
+    $skip_dir = qr/\Q$skip_dir\E/;
+
     find sub {
         return unless -f $_;
         for my $ignore (@$IGNORE_FILE) {
             $_ =~ $ignore and return;
         }
-        if ($File::Find::name =~ m!$dir/$Config{archname}!) {
+        if ($File::Find::name =~ $skip_dir) {
             return;
         }
+
         my $relative = File::Spec::Unix->abs2rel($File::Find::name, $dir);
         for my $exclude (@{$self->{exclude}}) {
             if ($File::Find::name eq $exclude) {
@@ -176,9 +184,8 @@ sub collect_files {
 
 sub build_dir {
     my ($self, $dir_string) = @_;
-    my $cwd = cwd;
     my @dir;
-    for my $d (grep -d, map { catdir($cwd, $_) } split /,/, $dir_string) {
+    for my $d (map { abs_path $_ } grep -d, split /,/, $dir_string) {
         my $try = catdir($d, "lib/perl5");
         if (-d $try) {
             push @dir, $try, catdir($try, $Config{archname});
