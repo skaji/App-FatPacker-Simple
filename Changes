@@ -2,6 +2,10 @@ Revision history for App::FatPacker::Simple
 
 {{$NEXT}}
 
+    - document that this module is an alternative
+      for ONLY fatpack file command
+    - stop localizing PERL5LIB and PERL5OPT in test
+
 0.01 2015-02-22T08:18:14Z
 
-    initial version
+    - initial version
