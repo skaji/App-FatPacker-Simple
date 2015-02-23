@@ -8,9 +8,9 @@ use Exporter 'import';
 use File::Basename 'dirname';
 use File::Path 'mkpath';
 use File::Spec;
-use File::pushd 'tempd';
+use File::pushd qw(pushd tempd);
 
-our @EXPORT = qw(run spew spew_pm slurp contains tempd);
+our @EXPORT = qw(run spew spew_pm slurp contains pushd tempd);
 
 my $base = abs_path( File::Spec->catdir( dirname(__FILE__), "..") );
 

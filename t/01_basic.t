@@ -3,6 +3,7 @@ use warnings;
 use utf8;
 use Test::More;
 use t::Util;
+use Config;
 
 subtest basic => sub {
     my $guard = tempd;
@@ -67,6 +68,30 @@ subtest non_pm => sub {
     ok !$r->success;
     like $r->err, qr/ERROR/;
     ok !-f "foo.pl";
+};
+
+subtest handle_relative_and_abs_path => sub {
+    my $guard = tempd;
+    spew 1 => "hello.pl";
+    spew_pm "Hoge1", "lib";
+    spew_pm "Hoge2", "extlib/lib/perl5";
+    spew_pm "Hoge3", "extlib/lib/perl5/$Config{archname}";
+    {
+        mkdir "test1";
+        my $guard1 = pushd "test1";
+        run "--dir", "../lib,../extlib", "../hello.pl";
+        ok contains("hello.fatpack.pl", "Hoge1");
+        ok contains("hello.fatpack.pl", "Hoge2");
+        ok contains("hello.fatpack.pl", "Hoge3");
+    }
+    {
+        mkdir "test2";
+        my $guard2 = pushd "test2";
+        run "--dir", "$guard/lib,$guard/extlib", "$guard/hello.pl";
+        ok contains("hello.fatpack.pl", "Hoge1");
+        ok contains("hello.fatpack.pl", "Hoge2");
+        ok contains("hello.fatpack.pl", "Hoge3");
+    }
 };
 
 done_testing;
