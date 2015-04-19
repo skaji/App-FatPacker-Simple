@@ -128,12 +128,15 @@ sub fatpack_file {
 sub load_main_script {
     my ($self, $file) = @_;
     open my $fh, "<", $file or die "Cannot open '$file': $!\n";
-    my ($shebang, $script) = ( scalar(<$fh>), join "", <$fh> );
-    if (index($shebang, '#!') != 0) {
-        $shebang = "";
-        $script  = $shebang . $script;
+    my @lines = <$fh>;
+    my @shebang;
+    if (@lines && index($lines[0], '#!') == 0) {
+        while (1) {
+            push @shebang, shift @lines;
+            last if $shebang[-1] =~ m{^\#\!.*perl};
+        }
     }
-    ($shebang, $script);
+    ((join "", @shebang), (join "", @lines));
 }
 
 sub load_file {
