@@ -69,5 +69,8 @@
       }
    },
    "version" : "0.02",
-   "x_authority" : "cpan:SKAJI"
+   "x_authority" : "cpan:SKAJI",
+   "x_contributors" : [
+      "Kazuho Oku <kazuhooku@gmail.com>"
+   ]
 }
