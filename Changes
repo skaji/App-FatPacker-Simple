@@ -2,6 +2,10 @@ Revision history for App::FatPacker::Simple
 
 {{$NEXT}}
 
+    - handle lib/ directories more correctly
+    - recognize multi-line shebang,
+      as described in `perldoc perlrun` (#3 by kazuho)
+
 0.02 2015-02-23T16:13:47Z
 
     - document that this module is an alternative
