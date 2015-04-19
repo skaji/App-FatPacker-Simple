@@ -14,7 +14,7 @@ use Getopt::Long qw(:config no_auto_abbrev no_ignore_case);
 use Perl::Strip;
 use Pod::Usage 'pod2usage';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our $IGNORE_FILE = [
     qr/\.pod$/,
