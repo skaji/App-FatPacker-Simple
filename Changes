@@ -2,6 +2,8 @@ Revision history for App::FatPacker::Simple
 
 {{$NEXT}}
 
+0.04 2015-04-28T12:38:04Z
+
     - introduce --shebang SHEBANG option
 
 0.03 2015-04-19T07:13:27Z
