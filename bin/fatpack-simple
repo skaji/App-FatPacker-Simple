@@ -27,6 +27,7 @@ fatpack-simple - only fatpack a script
     -q, --quiet             be quiet
         --color             color output, default: on
         --no-perl-strip     do not perform perl-strip
+        --shebang SHEBANG   use custom shebang
     -h, --help              show this help
     -v, --version           show version
 
@@ -34,6 +35,7 @@ fatpack-simple - only fatpack a script
     > fatpack-simple script.pl
     > fatpack-simple --dir deps,my-ext --output artifact.pl script.pl
     > fatpack-simple --exclude Module::Build,List::MoreUtils --strict script.pl
+    > fatpack-simple --shebang '#!/usr/bin/env perl' script.pl
 
 =head1 DESCRIPTION
 

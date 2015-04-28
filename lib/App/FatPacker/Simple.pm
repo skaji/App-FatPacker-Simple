@@ -41,6 +41,7 @@ sub parse_options {
         "v|version"     => sub { printf "%s %s\n", __PACKAGE__, __PACKAGE__->VERSION; exit },
         "color!"        => \(my $color = 1),
         "no-perl-strip" => \(my $no_perl_strip),
+        "shebang=s"     => \(my $custom_shebang),
     or pod2usage(1);
     $self->{script}     = shift @ARGV or do { warn "Missing scirpt.\n"; pod2usage(1) };
     $self->{dir}        = $self->build_dir($dir);
@@ -49,6 +50,7 @@ sub parse_options {
     $self->{strict}     = $strict;
     $self->{color}      = $color;
     $self->{perl_strip} = $no_perl_strip ? undef : Perl::Strip->new;
+    $self->{custom_shebang} = $custom_shebang;
     $self->{exclude}    = [];
     if ($exclude) {
         for my $e (split /,/, $exclude) {
@@ -118,6 +120,7 @@ sub run {
 sub fatpack_file {
     my ($self, $file) = @_;
     my ($shebang, $script) = $self->load_main_script($file);
+    $shebang = $self->{custom_shebang} if $self->{custom_shebang};
     my %files;
     $self->collect_files($_, \%files) for @{ $self->{dir} };
     my $fatpacker = App::FatPacker->new;
