@@ -13,6 +13,9 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => 0
   },
   "DISTNAME" => "App-FatPacker-Simple",
+  "EXE_FILES" => [
+    "script/fatpack-simple"
+  ],
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.008005",
   "NAME" => "App::FatPacker::Simple",

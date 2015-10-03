@@ -39,7 +39,7 @@ sub run {
         # your responsibility :-)
         # local $ENV{PERL5LIB};
         # local $ENV{PERL5OPT};
-        system $^X, "-I$base/lib", "$base/bin/fatpack-simple", @argv;
+        system $^X, "-I$base/lib", "$base/script/fatpack-simple", @argv;
     };
     Result->new($out, $err, $exit);
 }
