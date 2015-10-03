@@ -2,6 +2,10 @@ Revision history for App::FatPacker::Simple
 
 {{$NEXT}}
 
+0.06  2015-10-04 00:50:34 JST
+
+    - rename bin/ to script/ in order to install fatpack-simple script
+
 0.05  2015-10-04 00:37:51 JST
 
     - Update mentioned module App::fatten (has been renamed to App::depak) (#6 by perlancar)
