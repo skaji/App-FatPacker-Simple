@@ -51,7 +51,7 @@ That is, App::FatPacker::Simple only fatpacks a script with features:
 
 [App::FatPacker](https://metacpan.org/pod/App::FatPacker)
 
-[App::fatten](https://metacpan.org/pod/App::fatten)
+[App::depak](https://metacpan.org/pod/App::depak)
 
 [Perl::Strip](https://metacpan.org/pod/Perl::Strip)
 

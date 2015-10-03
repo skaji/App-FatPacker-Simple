@@ -272,7 +272,7 @@ That is, App::FatPacker::Simple only fatpacks a script with features:
 
 L<App::FatPacker>
 
-L<App::fatten>
+L<App::depak>
 
 L<Perl::Strip>
 
@@ -287,4 +287,3 @@ This library is free software; you can redistribute it and/or modify it under th
 Shoichi Kaji E<lt>skaji@cpan.orgE<gt>
 
 =cut
-
