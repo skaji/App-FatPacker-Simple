@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/shoichikaji/App-FatPacker-Simple.svg?branch=master)](https://travis-ci.org/shoichikaji/App-FatPacker-Simple)
+
 # NAME
 
 App::FatPacker::Simple - only fatpack a script
@@ -55,12 +56,8 @@ That is, App::FatPacker::Simple only fatpacks a script with features:
 
 [Perl::Strip](https://metacpan.org/pod/Perl::Strip)
 
-# LICENSE
+# COPYRIGHT AND LICENSE
 
-Copyright (C) Shoichi Kaji.
+Copyright 2015 Shoichi Kaji <skaji@cpan.org>
 
 This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
-
-# AUTHOR
-
-Shoichi Kaji <skaji@cpan.org>

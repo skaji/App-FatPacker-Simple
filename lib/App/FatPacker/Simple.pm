@@ -276,14 +276,10 @@ L<App::depak>
 
 L<Perl::Strip>
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-Copyright (C) Shoichi Kaji.
+Copyright 2015 Shoichi Kaji E<lt>skaji@cpan.orgE<gt>
 
 This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
-
-=head1 AUTHOR
-
-Shoichi Kaji E<lt>skaji@cpan.orgE<gt>
 
 =cut
