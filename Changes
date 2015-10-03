@@ -2,6 +2,10 @@ Revision history for App::FatPacker::Simple
 
 {{$NEXT}}
 
+0.05  2015-10-04 00:37:51 JST
+
+    - Update mentioned module App::fatten (has been renamed to App::depak) (#6 by perlancar)
+
 0.04 2015-04-28T12:38:04Z
 
     - introduce --shebang SHEBANG option
