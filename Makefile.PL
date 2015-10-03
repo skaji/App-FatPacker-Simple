@@ -18,7 +18,7 @@ my %WriteMakefileArgs = (
   "NAME" => "App::FatPacker::Simple",
   "PREREQ_PM" => {
     "App::FatPacker" => 0,
-    "Distribution::Metadata" => 0,
+    "Distribution::Metadata" => "0.04",
     "Perl::Strip" => 0
   },
   "TEST_REQUIRES" => {
@@ -36,7 +36,7 @@ my %WriteMakefileArgs = (
 my %FallbackPrereqs = (
   "App::FatPacker" => 0,
   "Capture::Tiny" => 0,
-  "Distribution::Metadata" => 0,
+  "Distribution::Metadata" => "0.04",
   "File::pushd" => 0,
   "Perl::Strip" => 0,
   "Test::More" => "0.98"

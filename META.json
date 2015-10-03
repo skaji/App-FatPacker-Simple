@@ -38,7 +38,7 @@
       "runtime" : {
          "requires" : {
             "App::FatPacker" : "0",
-            "Distribution::Metadata" : "0",
+            "Distribution::Metadata" : "0.04",
             "Perl::Strip" : "0",
             "perl" : "5.008005"
          }
