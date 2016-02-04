@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/shoichikaji/App-FatPacker-Simple.svg?branch=master)](https://travis-ci.org/shoichikaji/App-FatPacker-Simple)
+[![Build Status](https://travis-ci.org/skaji/App-FatPacker-Simple.svg?branch=master)](https://travis-ci.org/skaji/App-FatPacker-Simple)
 
 # NAME
 
@@ -58,6 +58,6 @@ That is, App::FatPacker::Simple only fatpacks a script with features:
 
 # COPYRIGHT AND LICENSE
 
-Copyright 2015 Shoichi Kaji <skaji@cpan.org>
+Copyright 2015 Shoichi Kaji &lt;skaji@cpan.org>
 
 This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
