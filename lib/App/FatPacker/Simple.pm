@@ -151,16 +151,12 @@ sub load_file {
         open my $fh, "<", $absolute or die "Cannot open '$absolute': $!\n";
         local $/; <$fh>;
     };
-    if ($self->{perl_strip}) {
-        if (grep { $original =~ $_ } @{$self->{exclude_strip}}) {
-            $self->debug("fatpack $relative (without perl-strip)");
-            return $content;
-        } else {
-            $self->debug("perl-strip $relative");
-            return $self->{perl_strip}->strip($content);
-        }
+
+    if ($self->{perl_strip} and !grep { $original =~ $_ } @{$self->{exclude_strip}}) {
+        $self->debug("fatpack $relative (with perl-strip)");
+        return $self->{perl_strip}->strip($content);
     } else {
-        $self->debug("fatpack $relative");
+        $self->debug("fatpack $relative (without perl-strip)");
         return $content;
     }
 }
