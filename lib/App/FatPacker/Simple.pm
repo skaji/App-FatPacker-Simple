@@ -18,9 +18,9 @@ our $VERSION = '0.06';
 
 our $IGNORE_FILE = [
     qr/\.pod$/,
-    qr/^\.packlist$/,
-    qr/^MYMETA\.json$/,
-    qr/^install\.json$/,
+    qr/\.packlist$/,
+    qr/MYMETA\.json$/,
+    qr/install\.json$/,
 ];
 
 sub new {
@@ -143,13 +143,12 @@ sub load_main_script {
 }
 
 sub load_file {
-    my ($self, $file, $dir) = @_;
+    my ($self, $file, $relative) = @_;
 
     my $content = do {
         open my $fh, "<", $file or die "Cannot open '$file': $!\n";
         local $/; <$fh>;
     };
-    my $relative = File::Spec::Unix->abs2rel($file, $dir);
     my $message  = $self->{perl_strip} ? "perl-strip" : "fatpack";
     $self->debug("$message $relative");
     $self->{perl_strip} ? $self->{perl_strip}->strip($content) : $content;
@@ -158,24 +157,23 @@ sub load_file {
 sub collect_files {
     my ($self, $dir, $files) = @_;
 
+    my $absolute_dir = abs_path($dir);
     # When $dir is not an archlib,
     # and we are about to search $dir/archlib, skip it!
     # because $dir/archlib itself will be searched another time.
-    my $skip_dir = catdir($dir, $Config{archname});
+    my $skip_dir = catdir($absolute_dir, $Config{archname});
     $skip_dir = qr/\Q$skip_dir\E/;
 
-    find sub {
+    my $find = sub {
         return unless -f $_;
         for my $ignore (@$IGNORE_FILE) {
             $_ =~ $ignore and return;
         }
-        if ($File::Find::name =~ $skip_dir) {
-            return;
-        }
-
-        my $relative = File::Spec::Unix->abs2rel($File::Find::name, $dir);
+        my $absolute = abs_path($_);
+        return if $absolute =~ $skip_dir;
+        my $relative = File::Spec::Unix->abs2rel($absolute, $absolute_dir);
         for my $exclude (@{$self->{exclude}}) {
-            if ($File::Find::name eq $exclude) {
+            if ($absolute eq $exclude) {
                 $self->debug("exclude $relative");
                 return;
             }
@@ -184,14 +182,15 @@ sub collect_files {
             $self->warning("skip non perl module file $relative");
             return;
         }
-        $files->{$relative} = $self->load_file($File::Find::name, $dir);
-    }, $dir;
+        $files->{$relative} = $self->load_file($absolute, $relative);
+    };
+    find({wanted => $find, no_chdir => 1}, $dir);
 }
 
 sub build_dir {
     my ($self, $dir_string) = @_;
     my @dir;
-    for my $d (map { abs_path $_ } grep -d, split /,/, $dir_string) {
+    for my $d (grep -d, split /,/, $dir_string) {
         my $try = catdir($d, "lib/perl5");
         if (-d $try) {
             push @dir, $try, catdir($try, $Config{archname});
