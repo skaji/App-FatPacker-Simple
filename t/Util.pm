@@ -61,7 +61,7 @@ sub spew_pm {
     my ($package, $dir) = @_;
     my $pm = $package;
     $pm =~ s{::}{/}; $pm .= ".pm";
-    spew "use $package; 1" => "$dir/$pm";
+    spew "use $package; 1; # this is comment" => "$dir/$pm";
 }
 
 sub contains {

@@ -94,4 +94,53 @@ subtest handle_relative_and_abs_path => sub {
     }
 };
 
+subtest no_strip => sub {
+    my $guard = tempd;
+    spew 1 => "hello.pl";
+    spew_pm "Hoge1", "lib";
+    spew_pm "Hoge2", "extlib/lib/perl5";
+    spew_pm "Hoge3", "local/lib/perl5";
+    run "--no-strip", "hello.pl";
+    ok -f "hello.fatpack.pl";
+    for my $i (1..3) {
+        ok contains("hello.fatpack.pl", "Hoge$i");
+    }
+    my $content = slurp("hello.fatpack.pl");
+    like $content, qr/\Quse Hoge1; 1; # this is comment/;
+    like $content, qr/\Quse Hoge2; 1; # this is comment/;
+    like $content, qr/\Quse Hoge3; 1; # this is comment/;
+};
+
+subtest exclude_strip => sub {
+    my $guard = tempd;
+    spew 1 => "hello.pl";
+    spew_pm "Hoge1", "lib";
+    spew_pm "Hoge2", "extlib/lib/perl5";
+    spew_pm "Hoge3", "local/lib/perl5";
+    {
+        my $r = run "--exclude-strip", "Hoge1", "hello.pl";
+        warn $r->err;
+        ok -f "hello.fatpack.pl";
+        for my $i (1..3) {
+            ok contains("hello.fatpack.pl", "Hoge$i");
+        }
+        my $content = slurp("hello.fatpack.pl");
+        like $content, qr/\Quse Hoge1; 1; # this is comment/;
+        like $content, qr/\Quse Hoge2;1;/;
+        like $content, qr/\Quse Hoge3;1;/;
+    }
+    {
+        my $r = run "--exclude-strip", "^(?:local|extlib)", "hello.pl";
+        warn $r->err;
+        ok -f "hello.fatpack.pl";
+        for my $i (1..3) {
+            ok contains("hello.fatpack.pl", "Hoge$i");
+        }
+        my $content = slurp("hello.fatpack.pl");
+        like $content, qr/\Quse Hoge1;1;/;
+        like $content, qr/\Quse Hoge2; 1; # this is comment/;
+        like $content, qr/\Quse Hoge3; 1; # this is comment/;
+    }
+};
+
 done_testing;

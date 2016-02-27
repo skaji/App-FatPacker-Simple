@@ -40,8 +40,9 @@ sub parse_options {
         "s|strict"      => \(my $strict),
         "v|version"     => sub { printf "%s %s\n", __PACKAGE__, __PACKAGE__->VERSION; exit },
         "color!"        => \(my $color = 1),
-        "no-perl-strip" => \(my $no_perl_strip),
         "shebang=s"     => \(my $custom_shebang),
+        "exclude-strip=s@" => \(my $exclude_strip),
+        "no-strip|no-perl-strip" => \(my $no_perl_strip),
     or pod2usage(1);
     $self->{script}     = shift @ARGV or do { warn "Missing scirpt.\n"; pod2usage(1) };
     $self->{dir}        = $self->build_dir($dir);
@@ -51,6 +52,7 @@ sub parse_options {
     $self->{color}      = $color;
     $self->{perl_strip} = $no_perl_strip ? undef : Perl::Strip->new;
     $self->{custom_shebang} = $custom_shebang;
+    $self->{exclude_strip}  = [map { qr/$_/ } @{$exclude_strip || []}];
     $self->{exclude}    = [];
     if ($exclude) {
         for my $e (split /,/, $exclude) {
@@ -143,15 +145,24 @@ sub load_main_script {
 }
 
 sub load_file {
-    my ($self, $file, $relative) = @_;
+    my ($self, $absolute, $relative, $original) = @_;
 
     my $content = do {
-        open my $fh, "<", $file or die "Cannot open '$file': $!\n";
+        open my $fh, "<", $absolute or die "Cannot open '$absolute': $!\n";
         local $/; <$fh>;
     };
-    my $message  = $self->{perl_strip} ? "perl-strip" : "fatpack";
-    $self->debug("$message $relative");
-    $self->{perl_strip} ? $self->{perl_strip}->strip($content) : $content;
+    if ($self->{perl_strip}) {
+        if (grep { $original =~ $_ } @{$self->{exclude_strip}}) {
+            $self->debug("fatpack $relative (without perl-strip)");
+            return $content;
+        } else {
+            $self->debug("perl-strip $relative");
+            return $self->{perl_strip}->strip($content);
+        }
+    } else {
+        $self->debug("fatpack $relative");
+        return $content;
+    }
 }
 
 sub collect_files {
@@ -169,7 +180,8 @@ sub collect_files {
         for my $ignore (@$IGNORE_FILE) {
             $_ =~ $ignore and return;
         }
-        my $absolute = abs_path($_);
+        my $original = $_;
+        my $absolute = abs_path($original);
         return if $absolute =~ $skip_dir;
         my $relative = File::Spec::Unix->abs2rel($absolute, $absolute_dir);
         for my $exclude (@{$self->{exclude}}) {
@@ -182,7 +194,7 @@ sub collect_files {
             $self->warning("skip non perl module file $relative");
             return;
         }
-        $files->{$relative} = $self->load_file($absolute, $relative);
+        $files->{$relative} = $self->load_file($absolute, $relative, $original);
     };
     find({wanted => $find, no_chdir => 1}, $dir);
 }
