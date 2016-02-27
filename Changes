@@ -2,6 +2,10 @@ Revision history for App::FatPacker::Simple
 
 {{$NEXT}}
 
+0.07  2016-02-27 20:23:06 JST
+
+    - Introduce --exclude-strip option (#5, #7 by glensc)
+
 0.06  2015-10-04 00:50:34 JST
 
     - rename bin/ to script/ in order to install fatpack-simple script
