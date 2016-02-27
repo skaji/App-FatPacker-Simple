@@ -118,8 +118,7 @@ subtest exclude_strip => sub {
     spew_pm "Hoge2", "extlib/lib/perl5";
     spew_pm "Hoge3", "local/lib/perl5";
     {
-        my $r = run "--exclude-strip", "Hoge1", "hello.pl";
-        warn $r->err;
+        run "--exclude-strip", "Hoge1", "hello.pl";
         ok -f "hello.fatpack.pl";
         for my $i (1..3) {
             ok contains("hello.fatpack.pl", "Hoge$i");
@@ -130,8 +129,7 @@ subtest exclude_strip => sub {
         like $content, qr/\Quse Hoge3;1;/;
     }
     {
-        my $r = run "--exclude-strip", "^(?:local|extlib)", "hello.pl";
-        warn $r->err;
+        run "--exclude-strip", "^(?:local|extlib)", "hello.pl";
         ok -f "hello.fatpack.pl";
         for my $i (1..3) {
             ok contains("hello.fatpack.pl", "Hoge$i");
