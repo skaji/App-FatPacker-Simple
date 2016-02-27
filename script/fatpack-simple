@@ -28,7 +28,7 @@ fatpack-simple - only fatpack a script
         --color                 color output, default: on
         --no-strip              do not perform perl-strip
         --shebang SHEBANG       use custom shebang
-        --exclude-strip REGEXP  do not perform perl-strip on files which are matches REGEXP
+        --exclude-strip REGEXP  do not perform perl-strip on files which match REGEXP
     -h, --help                  show this help
     -v, --version               show version
 
