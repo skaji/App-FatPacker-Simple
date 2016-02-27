@@ -67,6 +67,7 @@
    "x_contributors" : [
       "Kazuho Oku <kazuhooku@gmail.com>",
       "perlancar <perlancar@gmail.com>"
-   ]
+   ],
+   "x_static_install" : "1"
 }
 
