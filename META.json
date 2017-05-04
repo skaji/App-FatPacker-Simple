@@ -31,7 +31,10 @@
       },
       "develop" : {
          "requires" : {
+            "Capture::Tiny" : "0",
             "Dist::Milla" : "v1.0.17",
+            "File::pushd" : "0",
+            "Test::More" : "0.98",
             "Test::Pod" : "1.41"
          }
       },
@@ -41,13 +44,6 @@
             "Distribution::Metadata" : "0.05",
             "Perl::Strip" : "0",
             "perl" : "5.008005"
-         }
-      },
-      "test" : {
-         "requires" : {
-            "Capture::Tiny" : "0",
-            "File::pushd" : "0",
-            "Test::More" : "0.98"
          }
       }
    },

@@ -1,4 +1,4 @@
-package t::Util;
+package Util;
 use strict;
 use warnings;
 use utf8;
@@ -12,7 +12,7 @@ use File::pushd qw(pushd tempd);
 
 our @EXPORT = qw(run spew spew_pm slurp contains pushd tempd);
 
-my $base = abs_path( File::Spec->catdir( dirname(__FILE__), "..") );
+my $base = abs_path( File::Spec->catdir( dirname(__FILE__), "..", "..") );
 
 {
     package Result;
