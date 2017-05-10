@@ -186,7 +186,7 @@ sub collect_files {
                 return;
             }
         }
-        if (!/\.(?:pm|ix|al)$/) {
+        if (!/\.(?:pm|ix|al|pl)$/) {
             $self->warning("skip non perl module file $relative");
             return;
         }
