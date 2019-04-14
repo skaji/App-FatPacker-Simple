@@ -12,7 +12,7 @@ use File::Spec::Functions 'catdir';
 use File::Spec::Unix;
 use Getopt::Long qw(:config no_auto_abbrev no_ignore_case);
 use Perl::Strip;
-use Pod::Usage 'pod2usage';
+use Pod::Usage 1.33 ();
 
 our $VERSION = '0.08';
 
@@ -34,7 +34,7 @@ sub parse_options {
     GetOptions
         "d|dir=s"       => \(my $dir = 'lib,fatlib,local,extlib'),
         "e|exclude=s"   => \(my $exclude),
-        "h|help"        => sub { pod2usage(0) },
+        "h|help"        => sub { $self->show_help; exit 1 },
         "o|output=s"    => \(my $output),
         "q|quiet"       => \(my $quiet),
         "s|strict"      => \(my $strict),
@@ -44,7 +44,7 @@ sub parse_options {
         "exclude-strip=s@" => \(my $exclude_strip),
         "no-strip|no-perl-strip" => \(my $no_perl_strip),
         "cache=s"       => \(my $cache),
-    or pod2usage(1);
+    or exit 1;
     $self->{script}     = shift @ARGV or do { warn "Missing scirpt.\n"; pod2usage(1) };
     $self->{dir}        = $self->build_dir($dir);
     $self->{output}     = $output;
@@ -70,6 +70,20 @@ sub parse_options {
         }
     }
     $self;
+}
+
+sub show_help {
+    open my $fh, '>', \my $out;
+    Pod::Usage::pod2usage
+        exitval => 'noexit',
+        input => $0,
+        output => $fh,
+        sections => 'SYNOPSIS|COMMANDS|OPTIONS|EXAMPLES',
+        verbose => 99,
+    ;
+    $out =~ s/^[ ]{4,6}/  /mg;
+    $out =~ s/\n$//;
+    print $out;
 }
 
 sub warning {
@@ -225,7 +239,7 @@ App::FatPacker::Simple - only fatpack a script
 
 =head1 SYNOPSIS
 
-    > fatpack-simple script.pl
+  $ fatpack-simple script.pl
 
 =head1 DESCRIPTION
 
