@@ -27,6 +27,7 @@ fatpack-simple - only fatpack a script
     -q, --quiet                 be quiet
         --color                 color output, default: on
         --no-strip              do not perform perl-strip
+        --cache DIRECTORY       cache directory for perl-strip
         --shebang SHEBANG       use custom shebang
         --exclude-strip REGEXP  do not perform perl-strip on files which match REGEXP
     -h, --help                  show this help

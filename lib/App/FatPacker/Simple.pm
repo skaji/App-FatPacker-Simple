@@ -43,6 +43,7 @@ sub parse_options {
         "shebang=s"     => \(my $custom_shebang),
         "exclude-strip=s@" => \(my $exclude_strip),
         "no-strip|no-perl-strip" => \(my $no_perl_strip),
+        "cache=s"       => \(my $cache),
     or pod2usage(1);
     $self->{script}     = shift @ARGV or do { warn "Missing scirpt.\n"; pod2usage(1) };
     $self->{dir}        = $self->build_dir($dir);
@@ -50,10 +51,12 @@ sub parse_options {
     $self->{quiet}      = $quiet;
     $self->{strict}     = $strict;
     $self->{color}      = $color;
-    $self->{perl_strip} = $no_perl_strip ? undef : Perl::Strip->new;
     $self->{custom_shebang} = $custom_shebang;
     $self->{exclude_strip}  = [map { qr/$_/ } @{$exclude_strip || []}];
     $self->{exclude}    = [];
+    if (!$no_perl_strip) {
+        $self->{perl_strip} = Perl::Strip->new($cache ? (cache => $cache) : ());
+    }
     if ($exclude) {
         for my $e (split /,/, $exclude) {
             my $dist = Distribution::Metadata->new_from_module(
