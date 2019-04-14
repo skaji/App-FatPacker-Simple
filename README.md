@@ -6,7 +6,7 @@ App::FatPacker::Simple - only fatpack a script
 
 # SYNOPSIS
 
-    > fatpack-simple script.pl
+    $ fatpack-simple script.pl
 
 # DESCRIPTION
 
