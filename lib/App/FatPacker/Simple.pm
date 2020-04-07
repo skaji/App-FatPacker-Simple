@@ -33,7 +33,7 @@ sub parse_options {
     local @ARGV = @_;
     GetOptions
         "d|dir=s"       => \(my $dir = 'lib,fatlib,local,extlib'),
-        "e|exclude=s"   => \(my $exclude),
+        "e|exclude=s@"  => \(my $exclude),
         "h|help"        => sub { $self->show_help; exit 1 },
         "o|output=s"    => \(my $output),
         "q|quiet"       => \(my $quiet),
@@ -58,7 +58,7 @@ sub parse_options {
         $self->{perl_strip} = Perl::Strip->new($cache ? (cache => $cache) : ());
     }
     if ($exclude) {
-        for my $e (split /,/, $exclude) {
+        for my $e (map { split /,/, } @{$exclude}) {
             my $dist = Distribution::Metadata->new_from_module(
                 $e, inc => $self->{dir},
             );
