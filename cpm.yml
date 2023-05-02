@@ -1,0 +1,12 @@
+prereqs:
+  runtime:
+    requires:
+      App::FatPacker:
+      Distribution::Metadata: { version: '0.05' }
+      Perl::Strip:
+      Pod::Usage: { version: '1.33' }
+      perl: { version: '5.008001' }
+  develop:
+    requires:
+      File::pushd:
+      Capture::Tiny:

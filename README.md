@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/skaji/App-FatPacker-Simple.svg?branch=master)](https://travis-ci.org/skaji/App-FatPacker-Simple)
+[![Actions Status](https://github.com/skaji/App-FatPacker-Simple/actions/workflows/test.yml/badge.svg)](https://github.com/skaji/App-FatPacker-Simple/actions)
 
 # NAME
 
@@ -13,15 +13,15 @@ App::FatPacker::Simple - only fatpack a script
 App::FatPacker::Simple or its frontend `fatpack-simple` helps you
 fatpack a script when **YOU** understand the whole dependencies of it.
 
-For tutorial, please look at [App::FatPacker::Simple::Tutorial](https://metacpan.org/pod/App::FatPacker::Simple::Tutorial).
+For tutorial, please look at [App::FatPacker::Simple::Tutorial](https://metacpan.org/pod/App%3A%3AFatPacker%3A%3ASimple%3A%3ATutorial).
 
 # MOTIVATION
 
-App::FatPacker::Simple is an alternative for [App::FatPacker](https://metacpan.org/pod/App::FatPacker)'s
+App::FatPacker::Simple is an alternative for [App::FatPacker](https://metacpan.org/pod/App%3A%3AFatPacker)'s
 `fatpack file` command.
 Let me explain why I wrote this module.
 
-[App::FatPacker](https://metacpan.org/pod/App::FatPacker) brings more portability to Perl, that is totally awesome.
+[App::FatPacker](https://metacpan.org/pod/App%3A%3AFatPacker) brings more portability to Perl, that is totally awesome.
 
 As far as I understand, App::FatPacker does 3 things:
 
@@ -50,11 +50,11 @@ That is, App::FatPacker::Simple only fatpacks a script with features:
 
 # SEE ALSO
 
-[App::FatPacker](https://metacpan.org/pod/App::FatPacker)
+[App::FatPacker](https://metacpan.org/pod/App%3A%3AFatPacker)
 
-[App::depak](https://metacpan.org/pod/App::depak)
+[App::depak](https://metacpan.org/pod/App%3A%3Adepak)
 
-[Perl::Strip](https://metacpan.org/pod/Perl::Strip)
+[Perl::Strip](https://metacpan.org/pod/Perl%3A%3AStrip)
 
 # COPYRIGHT AND LICENSE
 
