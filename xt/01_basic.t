@@ -1,9 +1,10 @@
-use strict;
+use v5.16;
 use warnings;
-use utf8;
+
 use Test::More;
 use Config;
 use Capture::Tiny 'capture';
+
 use lib "xt/lib";
 use Util;
 

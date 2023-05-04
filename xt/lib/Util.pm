@@ -1,7 +1,7 @@
 package Util;
-use strict;
+use v5.16;
 use warnings;
-use utf8;
+
 use Capture::Tiny qw(capture);
 use Cwd 'abs_path';
 use Exporter 'import';
@@ -14,8 +14,7 @@ our @EXPORT = qw(run spew spew_pm slurp contains pushd tempd);
 
 my $base = abs_path( File::Spec->catdir( dirname(__FILE__), "..", "..") );
 
-{
-    package Result;
+package Result {
     sub new {
         my ($class, $out, $err, $exit) = @_;
         bless { exit => $exit, out => $out, err => $err }, $class;
@@ -51,6 +50,7 @@ sub spew {
     open my $fh, ">", $file or die "open $file: $!";
     print {$fh} $content;
 }
+
 sub slurp {
     my $file = shift;
     open my $fh, "<", $file or die "open $file: $!";

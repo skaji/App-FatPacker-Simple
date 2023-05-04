@@ -29,9 +29,9 @@
          "requires" : {
             "App::FatPacker" : "0",
             "Distribution::Metadata" : "0.05",
+            "Getopt::Long" : "2.39",
             "Perl::Strip" : "0",
-            "Pod::Usage" : "1.33",
-            "perl" : "5.008001"
+            "perl" : "v5.16.0"
          }
       }
    },

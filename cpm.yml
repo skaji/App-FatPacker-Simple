@@ -3,9 +3,9 @@ prereqs:
     requires:
       App::FatPacker:
       Distribution::Metadata: { version: '0.05' }
+      Getopt::Long: { version: '2.39' }
       Perl::Strip:
-      Pod::Usage: { version: '1.33' }
-      perl: { version: '5.008001' }
+      perl: { version: 'v5.16' }
   develop:
     requires:
       File::pushd:
