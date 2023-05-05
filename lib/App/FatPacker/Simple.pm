@@ -1,4 +1,4 @@
-package App::FatPacker::Simple 0.09;
+package App::FatPacker::Simple 0.20;
 use v5.16;
 use warnings;
 
