@@ -1,5 +1,6 @@
-use v5.16;
+use v5.24;
 use warnings;
+use experimental qw(lexical_subs signatures);
 
 use Test::More;
 use Config;
@@ -8,7 +9,7 @@ use Capture::Tiny 'capture';
 use lib "xt/lib";
 use Util;
 
-subtest basic => sub {
+subtest basic => sub (@) {
     my $guard = tempd;
     spew 1 => "hello.pl";
     chmod 0755, "hello.pl";
@@ -26,7 +27,7 @@ subtest basic => sub {
     ok -f "output-test.fatpack";
 };
 
-subtest dir => sub {
+subtest dir => sub (@) {
     my $guard = tempd;
     spew 1 => "hello.pl";
     spew_pm "Hoge1", "lib";
@@ -47,7 +48,7 @@ subtest dir => sub {
     ok contains("hello.fatpack.pl", "Hoge5");
 };
 
-subtest local_lib => sub {
+subtest local_lib => sub (@) {
     my $guard = tempd;
     spew 1 => "hello.pl";
     spew_pm "Hoge1", "lib";
@@ -60,7 +61,7 @@ subtest local_lib => sub {
     }
 };
 
-subtest non_pm => sub {
+subtest non_pm => sub (@) {
     my $guard = tempd;
     spew 1 => "hello.pl";
     spew 1 => "lib/foo.so";
@@ -74,7 +75,7 @@ subtest non_pm => sub {
     ok !-f "foo.pl";
 };
 
-subtest handle_relative_and_abs_path => sub {
+subtest handle_relative_and_abs_path => sub (@) {
     my $guard = tempd;
     spew 1 => "hello.pl";
     spew_pm "Hoge1", "lib";
@@ -98,7 +99,7 @@ subtest handle_relative_and_abs_path => sub {
     }
 };
 
-subtest no_strip => sub {
+subtest no_strip => sub (@) {
     my $guard = tempd;
     spew 1 => "hello.pl";
     spew_pm "Hoge1", "lib";
@@ -115,7 +116,7 @@ subtest no_strip => sub {
     like $content, qr/\Quse Hoge3; 1; # this is comment/;
 };
 
-subtest exclude_strip => sub {
+subtest exclude_strip => sub (@) {
     my $guard = tempd;
     spew 1 => "hello.pl";
     spew_pm "Hoge1", "lib";

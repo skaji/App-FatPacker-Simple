@@ -1,18 +1,19 @@
-use v5.16;
+use v5.24;
 use warnings;
+use experimental qw(lexical_subs signatures);
 
 use Test::More;
 use lib "xt/lib";
 use Util;
 
-subtest exclude => sub {
+subtest exclude => sub (@) {
     my $guard = tempd;
     spew "use Hoge1; use File::pushd;" => "hello.pl";
     spew_pm "Hoge1", "lib";
     system("cpanm", "-nq", "--reinstall", "-Llocal", "File::pushd") == 0 or die;
     system("cpanm", "-nq", "--reinstall", "-Llocal", "Capture::Tiny") == 0 or die;
 
-    subtest basic => sub {
+    subtest basic => sub (@) {
         run "hello.pl", "--exclude", "Capture::Tiny";
         ok -f "hello.fatpack.pl";
         ok  contains("hello.fatpack.pl", "Hoge1");
@@ -20,7 +21,7 @@ subtest exclude => sub {
         ok !contains("hello.fatpack.pl", "Capture::Tiny");
     };
 
-    subtest abs_path => sub {
+    subtest abs_path => sub (@) {
         my $r = run "hello.pl",
             "-d", "$guard/local",
             "-e", "Capture::Tiny",
@@ -29,7 +30,7 @@ subtest exclude => sub {
         ok !contains("abs_out", "Capture::Tiny");
     };
 
-    subtest relative_path => sub {
+    subtest relative_path => sub (@) {
         mkdir "test";
         my $guard = pushd "test";
         my $r = run "../hello.pl",
@@ -41,7 +42,7 @@ subtest exclude => sub {
     };
 };
 
-subtest shebang => sub {
+subtest shebang => sub (@) {
     my $guard = tempd;
     spew <<'...' => 'no_shebang';
 1;
@@ -80,7 +81,7 @@ exec perl -x $0 "$@"
     is $lines[4], $fatpack_line;
 };
 
-subtest custom_shebang => sub {
+subtest custom_shebang => sub (@) {
     my $guard = tempd;
     spew <<'...' => 'no_shebang';
 1;
