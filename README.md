@@ -1,5 +1,3 @@
-[![Actions Status](https://github.com/skaji/App-FatPacker-Simple/actions/workflows/test.yml/badge.svg)](https://github.com/skaji/App-FatPacker-Simple/actions)
-
 # NAME
 
 App::FatPacker::Simple - only fatpack a script
@@ -55,6 +53,13 @@ That is, App::FatPacker::Simple only fatpacks a script with features:
 [App::depak](https://metacpan.org/pod/App%3A%3Adepak)
 
 [Perl::Strip](https://metacpan.org/pod/Perl%3A%3AStrip)
+
+# ARTIFACT ATTESTATIONS
+
+GitHub Artifact Attestations are generated for release tarballs uploaded to
+CPAN. If you care about provenance for the uploaded tarballs, see:
+
+[https://github.com/skaji/App-FatPacker-Simple/attestations](https://github.com/skaji/App-FatPacker-Simple/attestations)
 
 # COPYRIGHT AND LICENSE
 
