@@ -1,6 +1,6 @@
 Revision history for App::FatPacker::Simple
 
-{{$NEXT}}
+v1.0.0  2026-05-22
 
     - Raise minimum Perl to v5.24
 
