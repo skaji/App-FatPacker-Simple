@@ -1,6 +1,7 @@
 package Util;
-use v5.16;
+use v5.24;
 use warnings;
+use experimental qw(lexical_subs signatures);
 
 use Capture::Tiny qw(capture);
 use Cwd 'abs_path';
@@ -15,25 +16,23 @@ our @EXPORT = qw(run spew spew_pm slurp contains pushd tempd);
 my $base = abs_path( File::Spec->catdir( dirname(__FILE__), "..", "..") );
 
 package Result {
-    sub new {
-        my ($class, $out, $err, $exit) = @_;
+    sub new ($class, $out, $err, $exit) {
         bless { exit => $exit, out => $out, err => $err }, $class;
     }
-    sub success {
-        shift->{exit} == 0;
+    sub success ($self) {
+        $self->{exit} == 0;
     }
-    sub out {
-        my $out = shift->{out};
+    sub out ($self) {
+        my $out = $self->{out};
         wantarray ? ( split /\n/, $out ) : $out;
     }
-    sub err {
-        my $err = shift->{err};
+    sub err ($self) {
+        my $err = $self->{err};
         wantarray ? ( split /\n/, $err ) : $err;
     }
 }
 
-sub run {
-    my @argv = @_;
+sub run (@argv) {
     my ($out, $err, $exit) = capture {
         # your responsibility :-)
         # local $ENV{PERL5LIB};
@@ -43,29 +42,25 @@ sub run {
     Result->new($out, $err, $exit);
 }
 
-sub spew {
-    my ($content, $file) = @_;
+sub spew ($content, $file) {
     my $dir = dirname($file);
     mkpath $dir unless -d $dir;
     open my $fh, ">", $file or die "open $file: $!";
     print {$fh} $content;
 }
 
-sub slurp {
-    my $file = shift;
+sub slurp ($file) {
     open my $fh, "<", $file or die "open $file: $!";
     local $/; <$fh>;
 }
 
-sub spew_pm {
-    my ($package, $dir) = @_;
+sub spew_pm ($package, $dir) {
     my $pm = $package;
     $pm =~ s{::}{/}; $pm .= ".pm";
     spew "use $package; 1; # this is comment" => "$dir/$pm";
 }
 
-sub contains {
-    my ($file, $package) = @_;
+sub contains ($file, $package) {
     my $content = slurp $file;
     my $pm = $package;
     $pm =~ s{::}{/}; $pm .= ".pm";
