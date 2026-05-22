@@ -18,6 +18,16 @@ package Trial {
     }
 }
 
+package VersionFromMainModule {
+    use Moose;
+    with 'Dist::Zilla::Role::VersionProvider', 'Dist::Zilla::Role::ModuleMetadata';
+    sub provide_version ($self, @) {
+        my $metadata = $self->module_metadata_for_file($self->zilla->main_module, collect_pod => 0);
+        my $version = $metadata->version;
+        "$version";
+    }
+}
+
 package NextRelease {
     use Moose;
     extends 'Dist::Zilla::Plugin::NextRelease';
@@ -45,8 +55,8 @@ my @plugin = (
     'ExecDir' => [ dir => 'script' ],
     'Git::GatherDir' => [ exclude_filename => 'META.json' ],
     'CopyFilesFromBuild' => [ copy => 'META.json', copy => 'Changes' ],
-    'VersionFromMainModule' => [],
-    'ReversionOnRelease' => [ prompt => 1 ],
+    '=VersionFromMainModule' => [],
+    'ReversionOnRelease' => [],
     '=NextRelease' => [ format => '%v  %{yyyy-MM-dd}d%{ (TRIAL RELEASE)}T' ],
     '=Trial' => [],
     'Git::Check' => [ allow_dirty => 'Changes', allow_dirty => 'META.json' ],
