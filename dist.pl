@@ -68,7 +68,6 @@ my @plugin = (
     'Git::Contributors' => [],
 
     'CheckChangesHasContent' => [],
-    'ConfirmRelease' => [],
     'FakeRelease' => [],
     'CopyFilesFromRelease' => [ match => '\.pm$' ],
     'Git::Commit' => [ commit_msg => '%v%t', allow_dirty => 'Changes', allow_dirty => 'META.json', allow_dirty_match => '\.pm$' ],
